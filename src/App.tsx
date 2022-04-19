@@ -1,4 +1,5 @@
 import React from 'react';
+import { Toaster } from 'react-hot-toast';
 import { Routes, BrowserRouter as Router, Route } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -14,18 +15,22 @@ const theme = createTheme({
   },
 });
 
-const App = () => {
-  console.log('App');
-
-  return (
-    <ThemeProvider theme={theme}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Main />} />
-        </Routes>
-      </Router>
-    </ThemeProvider>
-  );
-};
+const App = () => (
+  <ThemeProvider theme={theme}>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Main />} />
+      </Routes>
+    </Router>
+    <Toaster
+      position="top-right"
+      toastOptions={{
+        style: {
+          fontWeight: 500,
+        },
+      }}
+    />
+  </ThemeProvider>
+);
 
 export default App;

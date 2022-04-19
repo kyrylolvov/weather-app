@@ -1,10 +1,14 @@
+import { CurrentWeather, DailyForecast } from '../utils/types';
 import instance from './instance';
 
-const getJobs = async () => instance.get('/remote-jobs', {
+const getWeather = async ({ lat, lon }: { lat: number, lon: number }) => instance.get<{ current: CurrentWeather, daily: DailyForecast }>('/data/2.5/onecall', {
   params: {
-    limit: 5,
-    category: 'software-dev',
+    lat,
+    lon,
+    units: 'metric',
+    appid: 'e5d0aeca41a181bf5eda281dd41ff4af',
+    exclude: 'minutely,hourly,alerts',
   },
 });
 
-export default getJobs;
+export default getWeather;
