@@ -10,10 +10,10 @@ export interface CurrentWeather {
   humidity: number,
   wind_deg: number,
   wind_speed: number,
-  weather: {
+  weather: [{
     icon: string,
     main: string,
-  }
+  }]
 }
 
 export interface DailyForecast {
@@ -25,4 +25,9 @@ export interface DailyForecast {
     icon: string,
     main: string,
   }
+}
+
+export interface Weather {
+  icon: string,
+  main: string,
 }

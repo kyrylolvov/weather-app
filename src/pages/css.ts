@@ -8,7 +8,7 @@ export const container: CSSWithTheme = () => ({
   transition: 'all 0.3s',
 
   display: 'grid',
-  gridTemplateColumns: '2fr 5fr',
+  gridTemplateColumns: '1fr 2fr',
 });
 
 export const sidebar = (theme: string): CSSWithTheme => () => ({
@@ -16,6 +16,6 @@ export const sidebar = (theme: string): CSSWithTheme => () => ({
   backgroundColor: 'var(--background-secondary)',
   backgroundImage: theme === 'light' ? `url(${cloudBackgroundLight}) !important` : `url(${cloudBackground}) !important`,
   backgroundRepeat: 'no-repeat',
-  backgroundSize: '135%',
-  backgroundPosition: '50% 30%',
+  backgroundSize: '110%',
+  backgroundPosition: '50% 140px',
 });
