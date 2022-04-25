@@ -1,12 +1,12 @@
-import React, { } from 'react';
+import React from 'react';
 import {
   Box, Button, IconButton, Typography,
 } from '@mui/material';
 import { LocationOn, MyLocation } from '@mui/icons-material';
-import { ReactComponent as Sunny } from '../../assets/img/large/04.svg';
 
 import * as css from './css';
 import { Weather } from '../../utils/types';
+import getWeatherIcon from './utils';
 
 interface Props {
   temp: number,
@@ -24,7 +24,7 @@ const CurrentWeatherInformation: React.FC<Props> = ({ temp, weather, date }) => 
         <IconButton css={css.navigationButton}><MyLocation /></IconButton>
       </Box>
       <Box css={css.iconContainer}>
-        <Sunny />
+        {getWeatherIcon(weather.icon.substring(0, 2))}
       </Box>
       <Typography css={css.temperatureText}>
         {`${temp.toFixed(0)}°C`}

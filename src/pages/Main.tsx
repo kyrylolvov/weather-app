@@ -12,6 +12,7 @@ import getWeather from '../api/search';
 import CurrentWeatherInformation from '../components/СurrentWeatherInformation';
 
 import * as css from './css';
+import Header from '../components/Header';
 
 const Main: React.FC = () => {
   const defaultDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -57,10 +58,17 @@ const Main: React.FC = () => {
   return (
     <Box css={css.container} data-theme={theme}>
       <Box css={css.sidebar(theme)}>
-        {currentWeather
-        && <CurrentWeatherInformation temp={currentWeather?.temp} weather={currentWeather.weather[0]} date={moment().format('ddd, D MMM')} />}
+        {currentWeather && (
+          <CurrentWeatherInformation
+            temp={currentWeather?.temp}
+            weather={currentWeather.weather[0]}
+            date={moment().format('ddd, D MMM')}
+          />
+        )}
       </Box>
-      <Box onClick={switchTheme}>Main</Box>
+      <Box css={css.mainContainer}>
+        <Header isDarkTheme={theme === 'dark'} switchTheme={switchTheme} />
+      </Box>
     </Box>
   );
 };

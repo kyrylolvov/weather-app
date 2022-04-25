@@ -6,6 +6,10 @@
   --typograghy-secondary: #6e8098;
 
   --special-main: #ffec65;
+
+  --button-background: #5964e0;
+  --button-text-color: #ffffff;
+  --button-hover: #939bf4;
 }
 
 [data-theme='dark'] {
@@ -16,6 +20,10 @@
   --typograghy-secondary: #a09fb1;
 
   --special-main: #ffec65;
+
+  --button-background: #5964e0;
+  --button-text-color: #ffffff;
+  --button-hover: #939bf4;
 }
 
 @font-face {

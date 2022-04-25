@@ -19,3 +19,7 @@ export const sidebar = (theme: string): CSSWithTheme => () => ({
   backgroundSize: '110%',
   backgroundPosition: '50% 140px',
 });
+
+export const mainContainer: CSSWithTheme = () => ({
+  padding: '48px 144px',
+});
