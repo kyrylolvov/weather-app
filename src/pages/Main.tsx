@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import useLocalStorage from 'use-local-storage';
 import toast from 'react-hot-toast';
 
@@ -11,16 +11,21 @@ import getWeather from '../api/search';
 
 import CurrentWeatherInformation from '../components/СurrentWeatherInformation';
 
+import { ReactComponent as Loader } from '../assets/img/Loader.svg';
+
 import * as css from './css';
 import Header from '../components/Header';
+import WeeklyForecast from '../components/WeeklyForecast';
+import DetailedCurrentWeather from '../components/WeeklyForecast/DetailedCurrentWeather';
 
 const Main: React.FC = () => {
   const defaultDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const [theme, setTheme] = useLocalStorage('theme', defaultDark ? 'dark' : 'light');
+  const [loader, setLoader] = useState(false);
 
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
   const [currentWeather, setCurrentWeather] = useState<CurrentWeather | null>(null);
-  const [dailyForecast, setDailyForecast] = useState<DailyForecast | null>(null);
+  const [dailyForecast, setDailyForecast] = useState<DailyForecast[] | null>(null);
 
   const { fetch: fetchWeather, state: weatherState } = useAPI(getWeather);
 
@@ -29,7 +34,7 @@ const Main: React.FC = () => {
     setTheme(newTheme);
   };
 
-  useEffect(() => {
+  const setUpNavigation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -43,6 +48,14 @@ const Main: React.FC = () => {
     } else {
       toast.error("Your browser doesn't support geolocation");
     }
+  };
+
+  useEffect(() => {
+    setLoader(true);
+    setUpNavigation();
+    setTimeout(() => {
+      setLoader(false);
+    }, 1);
     fetchWeather({ lat: coordinates?.lat ?? 43.65107, lon: coordinates?.lon ?? -79.347015 });
   }, []);
 
@@ -53,9 +66,7 @@ const Main: React.FC = () => {
     }
   }, [weatherState]);
 
-  console.log(dailyForecast);
-
-  return (
+  return !loader ? (
     <Box css={css.container} data-theme={theme}>
       <Box css={css.sidebar(theme)}>
         {currentWeather && (
@@ -68,7 +79,24 @@ const Main: React.FC = () => {
       </Box>
       <Box css={css.mainContainer}>
         <Header isDarkTheme={theme === 'dark'} switchTheme={switchTheme} />
+        {dailyForecast && <WeeklyForecast weeklyForecast={dailyForecast} />}
+        {currentWeather && (
+          <DetailedCurrentWeather
+            feelsLike={currentWeather.feels_like}
+            uvi={currentWeather.uvi}
+            humidity={currentWeather.humidity}
+            windDeg={currentWeather.wind_deg}
+            windSpeed={currentWeather.wind_speed}
+          />
+        )}
       </Box>
+    </Box>
+  ) : (
+    <Box data-theme={theme} css={css.loaderContainer}>
+      <Loader />
+      <Typography className="loading" css={css.loaderText}>
+        Preparing your forecast
+      </Typography>
     </Box>
   );
 };

@@ -17,14 +17,15 @@ export interface CurrentWeather {
 }
 
 export interface DailyForecast {
+  dt: number,
   temp: {
     min: number,
     max: number,
   }
-  weather: {
+  weather: [{
     icon: string,
     main: string,
-  }
+  }]
 }
 
 export interface Weather {

@@ -6,10 +6,6 @@
   --typograghy-secondary: #6e8098;
 
   --special-main: #ffec65;
-
-  --button-background: #5964e0;
-  --button-text-color: #ffffff;
-  --button-hover: #939bf4;
 }
 
 [data-theme='dark'] {
@@ -20,10 +16,6 @@
   --typograghy-secondary: #a09fb1;
 
   --special-main: #ffec65;
-
-  --button-background: #5964e0;
-  --button-text-color: #ffffff;
-  --button-hover: #939bf4;
 }
 
 @font-face {
@@ -59,4 +51,49 @@ html {
 
 .MuiTypography-root {
   transition: all 0.2s;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+@keyframes l {
+  to {
+    clip-path: inset(0 -1ch 0 0);
+  }
+}
+
+@keyframes dotty {
+  0% {
+    content: '';
+  }
+  25% {
+    content: '.';
+  }
+  50% {
+    content: '..';
+  }
+  75% {
+    content: '...';
+  }
+  100% {
+    content: '';
+  }
+}
+
+.rotate {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: rotation 8s infinite linear;
+}
+
+.loading::after {
+  display: inline-block;
+  animation: dotty steps(1, end) 2s infinite;
+  content: '';
 }

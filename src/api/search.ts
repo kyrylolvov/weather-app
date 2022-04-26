@@ -1,7 +1,7 @@
 import { CurrentWeather, DailyForecast } from '../utils/types';
 import instance from './instance';
 
-const getWeather = async ({ lat, lon }: { lat: number, lon: number }) => instance.get<{ current: CurrentWeather, daily: DailyForecast }>('/data/2.5/onecall', {
+const getWeather = async ({ lat, lon }: { lat: number, lon: number }) => instance.get<{ current: CurrentWeather, daily: DailyForecast[] }>('/data/2.5/onecall', {
   params: {
     lat,
     lon,
