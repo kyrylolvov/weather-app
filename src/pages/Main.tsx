@@ -4,7 +4,7 @@ import useLocalStorage from 'use-local-storage';
 import toast from 'react-hot-toast';
 
 import moment from 'moment';
-import { Coordinates, CurrentWeather, DailyForecast } from '../utils/types';
+import { CurrentWeather, DailyForecast } from '../utils/types';
 import { useAPI } from '../hooks/useApi';
 import geolocationOptions from '../utils';
 import getWeather from '../api/search';
@@ -23,7 +23,7 @@ const Main: React.FC = () => {
   const [theme, setTheme] = useLocalStorage('theme', defaultDark ? 'dark' : 'light');
   const [loader, setLoader] = useState(false);
 
-  const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
+  // const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
   const [currentWeather, setCurrentWeather] = useState<CurrentWeather | null>(null);
   const [dailyForecast, setDailyForecast] = useState<DailyForecast[] | null>(null);
 
@@ -38,7 +38,8 @@ const Main: React.FC = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setCoordinates({ lat: position.coords.latitude, lon: position.coords.longitude });
+          fetchWeather({ lat: position.coords.latitude ?? 43.65107, lon: position.coords.longitude ?? -79.347015 });
+          // setCoordinates({ lat: position.coords.latitude, lon: position.coords.longitude });
         },
         (error) => {
           console.log(error);
@@ -58,10 +59,6 @@ const Main: React.FC = () => {
       setLoader(false);
     }, 2500);
   }, []);
-
-  useEffect(() => {
-    if (coordinates) { fetchWeather({ lat: coordinates?.lat ?? 43.65107, lon: coordinates?.lon ?? -79.347015 }); }
-  }, [coordinates]);
 
   useEffect(() => {
     if (weatherState.status === 'FULFILLED') {
