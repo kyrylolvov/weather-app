@@ -43,7 +43,7 @@ const Main: React.FC = () => {
         },
         (error) => {
           console.log(error);
-          toast.error(error.message);
+          if (error.message.length > 0) { toast.error(error.message); }
         },
         geolocationOptions,
       );
@@ -56,7 +56,9 @@ const Main: React.FC = () => {
     setLoader(true);
     setUpNavigation();
     setTimeout(() => {
-      setLoader(false);
+      if (navigator.geolocation) {
+        setLoader(false);
+      }
     }, 2500);
   }, []);
 
