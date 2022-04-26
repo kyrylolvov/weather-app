@@ -30,7 +30,7 @@ const DetailedCurrentWeather: React.FC<Props> = ({
         </Box>
         <Box css={css.cardComponent}>
           <Typography css={css.cardTitle}>Ultraviolet Index (UVI)</Typography>
-          <Typography css={css.cardText}>{uvi}</Typography>
+          <Typography css={css.cardText}>{uvi.toFixed(1)}</Typography>
         </Box>
         <Box css={css.cardComponent}>
           <Typography css={css.cardTitle}>Humidity</Typography>

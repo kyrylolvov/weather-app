@@ -6,6 +6,9 @@
   --typograghy-secondary: #6e8098;
 
   --special-main: #ffec65;
+
+  --icon-fill: #48484a;
+  --rain-fill: #48484a;
 }
 
 [data-theme='dark'] {
@@ -16,6 +19,9 @@
   --typograghy-secondary: #a09fb1;
 
   --special-main: #ffec65;
+
+  --icon-fill: #ffffff;
+  --rain-fill: #b9e6fc;
 }
 
 @font-face {
@@ -47,6 +53,14 @@ html {
   margin: 0;
   font-size: 16px;
   font-family: 'KumbhSans';
+}
+
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+body::-webkit-scrollbar {
+  display: none;
 }
 
 .MuiTypography-root {

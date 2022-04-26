@@ -20,6 +20,7 @@ export const container: CSSWithTheme = (theme) => ({
 
   [theme.breakpoints.down('sm')]: {
     gridTemplateColumns: '1fr',
+    height: 'auto',
   },
 });
 
@@ -36,9 +37,13 @@ export const sidebar = (currentTheme: string): CSSWithTheme => (theme) => ({
   },
 });
 
-export const mainContainer: CSSWithTheme = () => ({
+export const mainContainer: CSSWithTheme = (theme) => ({
   padding: '48px',
   overflowY: 'scroll',
+
+  [theme.breakpoints.down('md')]: {
+    overflowY: 'auto',
+  },
 });
 
 export const loaderContainer: CSSWithTheme = () => ({
