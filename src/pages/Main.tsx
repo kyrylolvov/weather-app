@@ -36,6 +36,7 @@ const Main: React.FC = () => {
 
   const setUpNavigation = () => {
     if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(() => {}, () => {}, {});
       navigator.geolocation.getCurrentPosition(
         (position) => {
           fetchWeather({ lat: position.coords.latitude ?? 43.65107, lon: position.coords.longitude ?? -79.347015 });
