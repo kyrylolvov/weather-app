@@ -41,6 +41,7 @@ const Main: React.FC = () => {
           setCoordinates({ lat: position.coords.latitude, lon: position.coords.longitude });
         },
         (error) => {
+          console.log(error);
           toast.error(error.message);
         },
         geolocationOptions,
@@ -55,9 +56,12 @@ const Main: React.FC = () => {
     setUpNavigation();
     setTimeout(() => {
       setLoader(false);
-    }, 1);
-    fetchWeather({ lat: coordinates?.lat ?? 43.65107, lon: coordinates?.lon ?? -79.347015 });
+    }, 2500);
   }, []);
+
+  useEffect(() => {
+    if (coordinates) { fetchWeather({ lat: coordinates?.lat ?? 43.65107, lon: coordinates?.lon ?? -79.347015 }); }
+  }, [coordinates]);
 
   useEffect(() => {
     if (weatherState.status === 'FULFILLED') {
