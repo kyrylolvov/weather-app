@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import moment from 'moment';
 import { CurrentWeather, DailyForecast } from '../utils/types';
 import { useAPI } from '../hooks/useApi';
-import geolocationOptions from '../utils';
+import { GeolocationErrors, geolocationOptions } from '../utils';
 import getWeather from '../api/search';
 
 import CurrentWeatherInformation from '../components/СurrentWeatherInformation';
@@ -42,8 +42,7 @@ const Main: React.FC = () => {
           // setCoordinates({ lat: position.coords.latitude, lon: position.coords.longitude });
         },
         (error) => {
-          console.log(error);
-          if (error.message.length > 0) { toast.error(error.message); }
+          toast.error(GeolocationErrors[error.code]);
         },
         geolocationOptions,
       );
@@ -55,15 +54,15 @@ const Main: React.FC = () => {
   useEffect(() => {
     setLoader(true);
     setUpNavigation();
-    setTimeout(() => {
-      if (navigator.geolocation) {
-        setLoader(false);
-      }
-    }, 2500);
   }, []);
 
   useEffect(() => {
     if (weatherState.status === 'FULFILLED') {
+      setTimeout(() => {
+        if (navigator.geolocation) {
+          setLoader(false);
+        }
+      }, 1500);
       setCurrentWeather(weatherState.data.current);
       setDailyForecast(weatherState.data.daily);
     }
