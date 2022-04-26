@@ -4,4 +4,4 @@ export const geolocationOptions = {
   enableHighAccuracy: true,
 };
 
-export const GeolocationErrors = ['User denied the request for Geolocation.', 'Location information is unavailable.', 'The request to get user location timed out.', 'An unknown error occurred.'];
+export const GeolocationErrors = ['User denied the request for Geolocation.', 'Location information is unavailable.', 'The request to get location timed out.', 'An unknown error occurred.'];
