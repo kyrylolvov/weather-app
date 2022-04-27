@@ -26,6 +26,7 @@ const Main: React.FC = () => {
   // const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
   const [currentWeather, setCurrentWeather] = useState<CurrentWeather | null>(null);
   const [dailyForecast, setDailyForecast] = useState<DailyForecast[] | null>(null);
+  const [currentLocation, setCurrentLocation] = useState<string>('');
 
   const { fetch: fetchWeather, state: weatherState } = useAPI(getWeather);
 
@@ -59,13 +60,10 @@ const Main: React.FC = () => {
 
   useEffect(() => {
     if (weatherState.status === 'FULFILLED') {
-      setTimeout(() => {
-        if (navigator.geolocation) {
-          setLoader(false);
-        }
-      }, 1500);
+      setTimeout(() => { if (navigator.geolocation) { setLoader(false); } }, 100);
       setCurrentWeather(weatherState.data.current);
       setDailyForecast(weatherState.data.daily);
+      setCurrentLocation(weatherState.data.timezone);
     }
   }, [weatherState]);
 
@@ -74,7 +72,9 @@ const Main: React.FC = () => {
       <Box css={css.sidebar(theme)}>
         {currentWeather && (
           <CurrentWeatherInformation
+            setUpNavigation={setUpNavigation}
             temp={currentWeather?.temp}
+            location={currentLocation}
             weather={currentWeather.weather[0]}
             date={moment().format('ddd, D MMM')}
           />

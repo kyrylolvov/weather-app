@@ -4,8 +4,58 @@ export const container: CSSWithTheme = () => ({
   display: 'flex',
   flexDirection: 'column',
   textAlign: 'center',
-  height: '100%',
+  height: '100vh',
   justifyContent: 'space-between',
+});
+
+export const menuContainer: CSSWithTheme = () => ({
+  height: '100vh',
+  padding: '24px 48px',
+  backgroundColor: 'var(--background-secondary)',
+  transition: 'all 0.2s',
+});
+
+export const closeIconContainer: CSSWithTheme = () => ({
+  display: 'flex',
+  justifyContent: 'flex-end',
+
+  '& .MuiButtonBase-root': {
+    '& .MuiSvgIcon-root': {
+      fill: 'var(--typograghy-secondary)',
+    },
+  },
+});
+
+export const searchContainer: CSSWithTheme = () => ({
+  marginTop: '48px',
+  display: 'grid',
+  gridTemplateColumns: '5fr 2fr',
+  gap: '16px',
+  gridGap: '16px',
+});
+
+export const searchButtonAction: CSSWithTheme = () => ({
+  backgroundColor: 'var(--button-color)',
+  color: '#ffffff',
+  textTransform: 'none',
+  transition: 'all 0.2s',
+
+  padding: '12px 24px',
+  fontWeight: 600,
+  fontSize: '16px',
+
+  '&:hover': {
+    backgroundColor: 'var(--button-color)',
+    color: '#ffffff',
+    transform: 'scale(1.02)',
+  },
+});
+
+export const searchInput: CSSWithTheme = () => ({
+  '& .MuiInputBase-root': {
+    padding: '8px 16px',
+    border: '2px solid var(--input-color)',
+  },
 });
 
 export const buttonsContainer: CSSWithTheme = () => ({
@@ -89,4 +139,11 @@ export const textWithIcon: CSSWithTheme = () => ({
   alignItems: 'center',
   justifyContent: 'center',
   marginTop: '32px',
+});
+
+export const sideBarContainer: CSSWithTheme = () => ({
+  background: 'var(--background-main)',
+  height: '100vh',
+  width: '100%',
+  position: 'absolute',
 });
