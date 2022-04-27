@@ -8,12 +8,16 @@ export const container: CSSWithTheme = () => ({
   justifyContent: 'space-between',
 });
 
-export const menuContainer: CSSWithTheme = () => ({
+export const menuContainer: CSSWithTheme = (theme) => ({
   height: '100vh',
   padding: '24px 48px',
   backgroundColor: 'var(--background-secondary)',
   boxSizing: 'border-box',
   transition: 'all 0.2s',
+
+  [theme.breakpoints.down('sm')]: {
+    padding: '24px',
+  },
 });
 
 export const closeIconContainer: CSSWithTheme = () => ({

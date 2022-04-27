@@ -1,10 +1,14 @@
-export const SwitchContainer: CSSWithTheme = () => ({
+export const SwitchContainer: CSSWithTheme = (theme) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
 
   '& svg': {
     fill: 'var(--typograghy-secondary)',
+  },
+
+  [theme.breakpoints.down('sm')]: {
+    justifyContent: 'center',
   },
 });
 
