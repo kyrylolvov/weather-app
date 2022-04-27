@@ -44,6 +44,8 @@ const Main: React.FC = () => {
           fetchLocation({ lat: position.coords.latitude, lon: position.coords.longitude });
         },
         (error) => {
+          fetchWeather({ lat: 43.65107, lon: -79.347015 });
+          fetchLocation({ lat: 43.65107, lon: -79.347015 });
           toast.error(GeolocationErrors[error.code]);
         },
         geolocationOptions,
