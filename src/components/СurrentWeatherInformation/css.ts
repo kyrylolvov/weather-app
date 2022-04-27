@@ -12,6 +12,7 @@ export const menuContainer: CSSWithTheme = () => ({
   height: '100vh',
   padding: '24px 48px',
   backgroundColor: 'var(--background-secondary)',
+  boxSizing: 'border-box',
   transition: 'all 0.2s',
 });
 
@@ -55,6 +56,7 @@ export const searchInput: CSSWithTheme = () => ({
   '& .MuiInputBase-root': {
     padding: '8px 16px',
     border: '2px solid var(--input-color)',
+    color: '#616475',
   },
 });
 

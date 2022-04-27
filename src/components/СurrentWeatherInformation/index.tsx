@@ -1,26 +1,90 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import * as yup from 'yup';
+import { useFormik } from 'formik';
 import {
-  Autocomplete,
-  Box, Button, IconButton, InputBase, Typography,
+  Autocomplete, Box, Button, IconButton, InputBase, Typography,
 } from '@mui/material';
-import { Close, LocationOn, MyLocation } from '@mui/icons-material';
+import {
+  Close, LocationOn, MyLocation, Search,
+} from '@mui/icons-material';
 
 import * as css from './css';
-import { Weather } from '../../utils/types';
+import { Location, Weather } from '../../utils/types';
 import getWeatherIcon from './utils';
+import { useAPI } from '../../hooks/useApi';
+import { getCoordinates, getLocation } from '../../api/search';
 
 interface Props {
-  temp: number,
-  weather: Weather,
-  date: string,
+  temp: number;
+  weather: Weather;
+  date: string;
   setUpNavigation: () => void;
   location: string;
+  fetchWeather: (payload: {
+    lat: number;
+    lon: number;
+  }, { removeOldData }?: {
+      removeOldData?: boolean | undefined;
+    }) => void
+  fetchWeatherStatus: string
+  setCurrentLocation: React.Dispatch<React.SetStateAction<string>>
 }
 
 const CurrentWeatherInformation: React.FC<Props> = ({
-  temp, weather, date, setUpNavigation, location,
+  temp, weather, date, setUpNavigation, location, fetchWeather, fetchWeatherStatus, setCurrentLocation,
 }) => {
   const [sideMenuOpened, setSideMenuOpened] = useState(false);
+  const [searchLocations, setSearchLocations] = useState<Location[]>([]);
+
+  const { fetch: fetchCoordinates, state: coordinatesState } = useAPI(getCoordinates);
+  const { fetch: fetchLocation, state: locationState } = useAPI(getLocation);
+
+  const validationSchema = yup.object({
+    location: yup.object({
+      name: yup.string().required('Please, provide a valid location'),
+      lat: yup.number().required('Please, provide a valid location'),
+      lon: yup.number().required('Please, provide a valid location'),
+      country: yup.string().required('Please, provide a valid location'),
+      state: yup.string(),
+    }),
+  });
+
+  const initialValues = {
+    location: {
+      name: '',
+    },
+  };
+
+  const {
+    values, setFieldValue, handleSubmit, isSubmitting, setSubmitting,
+  } = useFormik<any>({
+    validationSchema,
+    initialValues,
+    onSubmit: (submitValues) => {
+      fetchWeather({ lat: submitValues.location.lat, lon: submitValues.location.lon });
+      fetchLocation({ lat: submitValues.location.lat, lon: submitValues.location.lon });
+    },
+    enableReinitialize: true,
+  });
+
+  useEffect(() => {
+    if (coordinatesState.status === 'FULFILLED') {
+      setSearchLocations(coordinatesState.data);
+    }
+  }, [coordinatesState]);
+
+  useEffect(() => {
+    if (locationState.status === 'FULFILLED') {
+      setCurrentLocation(locationState.data[0].name);
+    }
+  }, [locationState]);
+
+  useEffect(() => {
+    if (fetchWeatherStatus === 'FULFILLED') {
+      setSubmitting(false);
+      setSideMenuOpened(false);
+    }
+  }, [fetchWeatherStatus]);
 
   return (
     <Box>
@@ -33,17 +97,38 @@ const CurrentWeatherInformation: React.FC<Props> = ({
           </Box>
           <Box css={css.searchContainer}>
             <Autocomplete
+              options={searchLocations}
+              value={values.location}
+              onChange={(e, selectedLocation: Location) => {
+                setFieldValue('location', selectedLocation);
+              }}
               css={css.searchInput}
               forcePopupIcon={false}
               disablePortal
               id="combo-box-demo"
-              options={[{ label: 'Nice' }]}
+              getOptionLabel={(selectedLocation) => (selectedLocation.name && selectedLocation.country
+                ? `${selectedLocation.name}${selectedLocation.state ? `, ${selectedLocation.state}` : ''}, ${
+                  selectedLocation.country
+                }`
+                : '')}
               renderInput={(params) => {
                 const { InputLabelProps, InputProps, ...rest } = params;
-                return <InputBase placeholder="Search location" {...params.InputProps} {...rest} />;
+                const { ref, className } = InputProps;
+                return (
+                  <InputBase
+                    placeholder="Search location"
+                    startAdornment={<Search sx={{ color: '#616475', marginRight: '16px' }} />}
+                    onChange={(e) => { if (e.target.value.length > 3) fetchCoordinates(e.target.value); }}
+                    ref={ref!}
+                    className={className!}
+                    {...rest}
+                  />
+                );
               }}
             />
-            <Button css={css.searchButtonAction}>Search</Button>
+            <Button onClick={() => handleSubmit()} disabled={isSubmitting} css={css.searchButtonAction}>
+              Search
+            </Button>
           </Box>
         </Box>
       ) : (
@@ -63,7 +148,7 @@ const CurrentWeatherInformation: React.FC<Props> = ({
             <Typography css={css.dateText}>{`Today • ${date}`}</Typography>
             <Box css={css.textWithIcon}>
               <LocationOn sx={{ marginRight: '8px' }} />
-              <Typography css={css.dateText}>{location.length > 0 ? location.split('/')[1] : ''}</Typography>
+              <Typography css={css.dateText}>{location}</Typography>
             </Box>
           </Box>
         </Box>

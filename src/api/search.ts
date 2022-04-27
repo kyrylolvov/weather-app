@@ -1,7 +1,7 @@
-import { CurrentWeather, DailyForecast } from '../utils/types';
+import { CurrentWeather, DailyForecast, Location } from '../utils/types';
 import instance from './instance';
 
-const getWeather = async ({ lat, lon }: { lat: number, lon: number }) => instance.get<{ current: CurrentWeather, daily: DailyForecast[], timezone: 'string' }>('/data/2.5/onecall', {
+export const getWeather = async ({ lat, lon }: { lat: number, lon: number }) => instance.get<{ current: CurrentWeather, daily: DailyForecast[], timezone: 'string' }>('/data/2.5/onecall', {
   params: {
     lat,
     lon,
@@ -11,4 +11,19 @@ const getWeather = async ({ lat, lon }: { lat: number, lon: number }) => instanc
   },
 });
 
-export default getWeather;
+export const getCoordinates = async (searchText: string) => instance.get<Location[]>('/geo/1.0/direct', {
+  params: {
+    q: searchText,
+    appid: 'e5d0aeca41a181bf5eda281dd41ff4af',
+    limit: 5,
+  },
+});
+
+export const getLocation = async ({ lat, lon }: { lat: number, lon: number }) => instance.get<Location[]>('/geo/1.0/reverse', {
+  params: {
+    lat,
+    lon,
+    appid: 'e5d0aeca41a181bf5eda281dd41ff4af',
+    limit: 1,
+  },
+});

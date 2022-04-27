@@ -7,7 +7,7 @@ import moment from 'moment';
 import { CurrentWeather, DailyForecast } from '../utils/types';
 import { useAPI } from '../hooks/useApi';
 import { GeolocationErrors, geolocationOptions } from '../utils';
-import getWeather from '../api/search';
+import { getLocation, getWeather } from '../api/search';
 
 import CurrentWeatherInformation from '../components/СurrentWeatherInformation';
 
@@ -23,12 +23,12 @@ const Main: React.FC = () => {
   const [theme, setTheme] = useLocalStorage('theme', defaultDark ? 'dark' : 'light');
   const [loader, setLoader] = useState(false);
 
-  // const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
   const [currentWeather, setCurrentWeather] = useState<CurrentWeather | null>(null);
   const [dailyForecast, setDailyForecast] = useState<DailyForecast[] | null>(null);
   const [currentLocation, setCurrentLocation] = useState<string>('');
 
   const { fetch: fetchWeather, state: weatherState } = useAPI(getWeather);
+  const { fetch: fetchLocation, state: locationState } = useAPI(getLocation);
 
   const switchTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
@@ -41,7 +41,7 @@ const Main: React.FC = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           fetchWeather({ lat: position.coords.latitude ?? 43.65107, lon: position.coords.longitude ?? -79.347015 });
-          // setCoordinates({ lat: position.coords.latitude, lon: position.coords.longitude });
+          fetchLocation({ lat: position.coords.latitude, lon: position.coords.longitude });
         },
         (error) => {
           toast.error(GeolocationErrors[error.code]);
@@ -63,15 +63,23 @@ const Main: React.FC = () => {
       setTimeout(() => { if (navigator.geolocation) { setLoader(false); } }, 100);
       setCurrentWeather(weatherState.data.current);
       setDailyForecast(weatherState.data.daily);
-      setCurrentLocation(weatherState.data.timezone);
     }
   }, [weatherState]);
+
+  useEffect(() => {
+    if (locationState.status === 'FULFILLED') {
+      setCurrentLocation(locationState.data[0].name);
+    }
+  }, [locationState]);
 
   return !loader ? (
     <Box css={css.container} data-theme={theme}>
       <Box css={css.sidebar(theme)}>
         {currentWeather && (
           <CurrentWeatherInformation
+            setCurrentLocation={setCurrentLocation}
+            fetchWeather={fetchWeather}
+            fetchWeatherStatus={weatherState.status}
             setUpNavigation={setUpNavigation}
             temp={currentWeather?.temp}
             location={currentLocation}
