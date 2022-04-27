@@ -39,6 +39,10 @@ const CurrentWeatherInformation: React.FC<Props> = ({
   const { fetch: fetchCoordinates, state: coordinatesState } = useAPI(getCoordinates);
   const { fetch: fetchLocation, state: locationState } = useAPI(getLocation);
 
+  useEffect(() => {
+    if (window.innerWidth < 600) { document.body.style.overflow = sideMenuOpened ? 'hidden' : 'auto'; }
+  }, [sideMenuOpened]);
+
   const validationSchema = yup.object({
     location: yup.object({
       name: yup.string().required('Please, provide a valid location'),
