@@ -19,7 +19,7 @@ export const menuContainer: CSSWithTheme = (theme) => ({
   boxSizing: 'border-box',
   transition: 'all 0.2s',
 
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down(1100)]: {
     padding: '24px',
   },
 });
