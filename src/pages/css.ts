@@ -42,7 +42,7 @@ export const mainContainer: CSSWithTheme = (theme) => ({
   },
 });
 
-export const loaderContainer: CSSWithTheme = () => ({
+export const loaderContainer: CSSWithTheme = (theme) => ({
   width: '100vw',
   flexDirection: 'column',
   height: '100vh',
@@ -51,6 +51,10 @@ export const loaderContainer: CSSWithTheme = () => ({
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: 'var(--background-main)',
+
+  [theme.breakpoints.down('sm')]: {
+    height: 'calc(100vh - env(safe-area-inset-bottom))',
+  },
 });
 
 export const loaderText: CSSWithTheme = () => ({

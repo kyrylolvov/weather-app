@@ -1,4 +1,4 @@
-export const container: CSSWithTheme = () => ({
+export const container: CSSWithTheme = (theme) => ({
   padding: '42px 46px',
   boxSizing: 'border-box',
   display: 'flex',
@@ -6,6 +6,10 @@ export const container: CSSWithTheme = () => ({
   textAlign: 'center',
   height: '100vh',
   justifyContent: 'space-between',
+
+  [theme.breakpoints.down('sm')]: {
+    height: 'calc(100vh - env(safe-area-inset-bottom))',
+  },
 });
 
 export const menuContainer: CSSWithTheme = (theme) => ({
