@@ -24,17 +24,13 @@ export const container: CSSWithTheme = (theme) => ({
   },
 });
 
-export const sidebar = (currentTheme: string): CSSWithTheme => (theme) => ({
+export const sidebar = (currentTheme: string): CSSWithTheme => () => ({
   transition: 'all 0.3s',
   backgroundColor: 'var(--background-secondary)',
   backgroundImage: currentTheme === 'light' ? `url(${cloudBackgroundLight}) !important` : `url(${cloudBackground}) !important`,
   backgroundRepeat: 'no-repeat',
   backgroundSize: '110%',
   backgroundPosition: '50% 140px',
-
-  [theme.breakpoints.down('sm')]: {
-    minHeight: '810px',
-  },
 });
 
 export const mainContainer: CSSWithTheme = (theme) => ({
