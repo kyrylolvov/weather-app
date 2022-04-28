@@ -87,7 +87,7 @@ const Main: React.FC = () => {
       const { lat, lon, name } = locationState.data[0];
       const lastCity = { lat, lon, name };
       const lastSearchedLocations = searchedLocations.length > 2 ? searchedLocations.slice(0, -1) : searchedLocations;
-      setSearchedLocations([lastCity, ...lastSearchedLocations!]);
+      if (!lastSearchedLocations.find((x) => x.name === lastCity.name)) setSearchedLocations([lastCity, ...lastSearchedLocations]);
       localStorage.setItem('lastCity', JSON.stringify(lastCity));
       if (!searchedLocations.find((x) => x.name === lastCity.name)) localStorage.setItem('searchedCities', JSON.stringify([lastCity, ...lastSearchedLocations]));
     }
@@ -104,6 +104,7 @@ const Main: React.FC = () => {
             setUpNavigation={setUpNavigation}
             temp={currentWeather?.temp}
             location={currentLocation}
+            searchedLocations={searchedLocations}
             weather={currentWeather.weather[0]}
             date={moment().format('ddd, D MMM')}
           />

@@ -5,7 +5,7 @@ import {
   Autocomplete, Box, Button, IconButton, InputBase, Typography,
 } from '@mui/material';
 import {
-  Close, LocationOn, MyLocation, Search,
+  ChevronRight, Close, LocationOn, MyLocation, Search,
 } from '@mui/icons-material';
 
 import * as css from './css';
@@ -20,13 +20,22 @@ interface Props {
   date: string;
   setUpNavigation: () => void;
   location: string;
-  fetchWeather: ({ lat, lon }:{ lat: number, lon: number }) => void
-  fetchLocation: ({ lat, lon }:{ lat: number, lon: number }) => void
-  fetchWeatherStatus: string
+  searchedLocations: { lat: number; lon: number; name: string }[];
+  fetchWeather: ({ lat, lon }: { lat: number; lon: number }) => void;
+  fetchLocation: ({ lat, lon }: { lat: number; lon: number }) => void;
+  fetchWeatherStatus: string;
 }
 
 const CurrentWeatherInformation: React.FC<Props> = ({
-  temp, weather, date, setUpNavigation, location, fetchWeather, fetchWeatherStatus, fetchLocation,
+  temp,
+  weather,
+  date,
+  setUpNavigation,
+  location,
+  fetchWeather,
+  fetchWeatherStatus,
+  fetchLocation,
+  searchedLocations,
 }) => {
   const [sideMenuOpened, setSideMenuOpened] = useState(false);
   const [searchLocations, setSearchLocations] = useState<Location[]>([]);
@@ -34,7 +43,9 @@ const CurrentWeatherInformation: React.FC<Props> = ({
   const { fetch: fetchCoordinates, state: coordinatesState } = useAPI(getCoordinates);
 
   useEffect(() => {
-    if (window.innerWidth < 600) { document.body.style.overflow = sideMenuOpened ? 'hidden' : 'auto'; }
+    if (window.innerWidth < 600) {
+      document.body.style.overflow = sideMenuOpened ? 'hidden' : 'auto';
+    }
   }, [sideMenuOpened]);
 
   const validationSchema = yup.object({
@@ -75,6 +86,8 @@ const CurrentWeatherInformation: React.FC<Props> = ({
     if (fetchWeatherStatus === 'FULFILLED') {
       setSubmitting(false);
       setSideMenuOpened(false);
+      setFieldValue('location', '');
+      setSearchLocations([]);
     }
   }, [fetchWeatherStatus]);
 
@@ -110,7 +123,9 @@ const CurrentWeatherInformation: React.FC<Props> = ({
                   <InputBase
                     placeholder="Search location"
                     startAdornment={<Search sx={{ color: '#616475', marginRight: '16px' }} />}
-                    onChange={(e) => { if (e.target.value.length > 3) fetchCoordinates(e.target.value); }}
+                    onChange={(e) => {
+                      if (e.target.value.length > 3) fetchCoordinates(e.target.value);
+                    }}
                     ref={ref!}
                     className={className!}
                     {...rest}
@@ -121,6 +136,20 @@ const CurrentWeatherInformation: React.FC<Props> = ({
             <Button onClick={() => handleSubmit()} disabled={isSubmitting} css={css.searchButtonAction}>
               Search
             </Button>
+          </Box>
+          <Box css={css.lastLocationsContainer}>
+            {searchedLocations.map((locationItem) => (
+              <Box
+                css={css.locationContainer}
+                onClick={() => {
+                  fetchWeather({ lat: locationItem.lat, lon: locationItem.lon });
+                  fetchLocation({ lat: locationItem.lat, lon: locationItem.lon });
+                }}
+              >
+                <Typography>{locationItem.name}</Typography>
+                <ChevronRight />
+              </Box>
+            ))}
           </Box>
         </Box>
       ) : (

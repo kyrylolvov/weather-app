@@ -153,3 +153,26 @@ export const sideBarContainer: CSSWithTheme = () => ({
   width: '100%',
   position: 'absolute',
 });
+
+export const lastLocationsContainer: CSSWithTheme = () => ({
+  marginTop: '58px',
+});
+
+export const locationContainer: CSSWithTheme = (theme) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  height: '64px',
+  marginBottom: '16px',
+  cursor: 'pointer',
+  color: 'var(--typograghy-main)',
+  transition: 'all 0.2s',
+  padding: '24px 12px',
+  boxSizing: 'border-box',
+
+  [theme.breakpoints.up('sm')]: {
+    '&:hover': {
+      border: '1px solid var(--typograghy-main)',
+    },
+  },
+});
