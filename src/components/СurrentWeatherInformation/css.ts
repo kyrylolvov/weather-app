@@ -166,7 +166,6 @@ export const locationContainer: CSSWithTheme = (theme) => ({
   marginBottom: '16px',
   cursor: 'pointer',
   color: 'var(--typograghy-main)',
-  transition: 'all 0.2s',
   padding: '24px 12px',
   boxSizing: 'border-box',
 
