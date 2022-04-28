@@ -12,7 +12,7 @@ import * as css from './css';
 import { Location, Weather } from '../../utils/types';
 import getWeatherIcon from './utils';
 import { useAPI } from '../../hooks/useApi';
-import { getCoordinates, getLocation } from '../../api/search';
+import { getCoordinates } from '../../api/search';
 
 interface Props {
   temp: number;
@@ -20,24 +20,18 @@ interface Props {
   date: string;
   setUpNavigation: () => void;
   location: string;
-  fetchWeather: (payload: {
-    lat: number;
-    lon: number;
-  }, { removeOldData }?: {
-      removeOldData?: boolean | undefined;
-    }) => void
+  fetchWeather: ({ lat, lon }:{ lat: number, lon: number }) => void
+  fetchLocation: ({ lat, lon }:{ lat: number, lon: number }) => void
   fetchWeatherStatus: string
-  setCurrentLocation: React.Dispatch<React.SetStateAction<string>>
 }
 
 const CurrentWeatherInformation: React.FC<Props> = ({
-  temp, weather, date, setUpNavigation, location, fetchWeather, fetchWeatherStatus, setCurrentLocation,
+  temp, weather, date, setUpNavigation, location, fetchWeather, fetchWeatherStatus, fetchLocation,
 }) => {
   const [sideMenuOpened, setSideMenuOpened] = useState(false);
   const [searchLocations, setSearchLocations] = useState<Location[]>([]);
 
   const { fetch: fetchCoordinates, state: coordinatesState } = useAPI(getCoordinates);
-  const { fetch: fetchLocation, state: locationState } = useAPI(getLocation);
 
   useEffect(() => {
     if (window.innerWidth < 600) { document.body.style.overflow = sideMenuOpened ? 'hidden' : 'auto'; }
@@ -76,12 +70,6 @@ const CurrentWeatherInformation: React.FC<Props> = ({
       setSearchLocations(coordinatesState.data);
     }
   }, [coordinatesState]);
-
-  useEffect(() => {
-    if (locationState.status === 'FULFILLED') {
-      setCurrentLocation(locationState.data[0].name);
-    }
-  }, [locationState]);
 
   useEffect(() => {
     if (fetchWeatherStatus === 'FULFILLED') {

@@ -1,6 +1,6 @@
 export interface Coordinates {
-  lat: number
-  lon: number
+  lat: number | null
+  lon: number | null
 }
 
 export interface CurrentWeather {

@@ -21,11 +21,14 @@ import DetailedCurrentWeather from '../components/WeeklyForecast/DetailedCurrent
 const Main: React.FC = () => {
   const defaultDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const [theme, setTheme] = useLocalStorage('theme', defaultDark ? 'dark' : 'light');
-  const [loader, setLoader] = useState(false);
+  const lastCityStored = localStorage.getItem('lastCity') ?? '';
+  const searchedCities = localStorage.getItem('searchedCities') ?? '';
 
+  const [loader, setLoader] = useState(false);
   const [currentWeather, setCurrentWeather] = useState<CurrentWeather | null>(null);
   const [dailyForecast, setDailyForecast] = useState<DailyForecast[] | null>(null);
   const [currentLocation, setCurrentLocation] = useState<string>('');
+  const [searchedLocations, setSearchedLocations] = useState<{ lat: number, lon: number, name: string }[]>(!searchedCities ? [] : JSON.parse(searchedCities));
 
   const { fetch: fetchWeather, state: weatherState } = useAPI(getWeather);
   const { fetch: fetchLocation, state: locationState } = useAPI(getLocation);
@@ -55,9 +58,19 @@ const Main: React.FC = () => {
     }
   };
 
+  const fetchSearchedLocation = () => {
+    const lastCity = JSON.parse(lastCityStored);
+    fetchWeather({ lat: lastCity.lat, lon: lastCity.lon });
+    fetchLocation({ lat: lastCity.lat, lon: lastCity.lon });
+  };
+
   useEffect(() => {
     setLoader(true);
-    setUpNavigation();
+    if (!lastCityStored) {
+      setUpNavigation();
+    } else {
+      fetchSearchedLocation();
+    }
   }, []);
 
   useEffect(() => {
@@ -71,6 +84,12 @@ const Main: React.FC = () => {
   useEffect(() => {
     if (locationState.status === 'FULFILLED') {
       setCurrentLocation(locationState.data[0].name);
+      const { lat, lon, name } = locationState.data[0];
+      const lastCity = { lat, lon, name };
+      const lastSearchedLocations = searchedLocations.length > 2 ? searchedLocations.slice(0, -1) : searchedLocations;
+      setSearchedLocations([lastCity, ...lastSearchedLocations!]);
+      localStorage.setItem('lastCity', JSON.stringify(lastCity));
+      if (!searchedLocations.find((x) => x.name === lastCity.name)) localStorage.setItem('searchedCities', JSON.stringify([lastCity, ...lastSearchedLocations]));
     }
   }, [locationState]);
 
@@ -79,7 +98,7 @@ const Main: React.FC = () => {
       <Box css={css.sidebar(theme)}>
         {currentWeather && (
           <CurrentWeatherInformation
-            setCurrentLocation={setCurrentLocation}
+            fetchLocation={fetchLocation}
             fetchWeather={fetchWeather}
             fetchWeatherStatus={weatherState.status}
             setUpNavigation={setUpNavigation}
