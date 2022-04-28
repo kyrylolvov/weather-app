@@ -59,6 +59,10 @@ html {
   font-family: 'KumbhSans';
 }
 
+html {
+  height: -webkit-fill-available;
+}
+
 body {
   -ms-overflow-style: none;
   scrollbar-width: none;
