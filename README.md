@@ -1,6 +1,6 @@
 ## ☀️ Weather App
 
-Weather web app to search for current and forecasted weather across the globe.
+An API powered weather web application to search for todays and next five days weather across the globe. 
 
 ### Description
 
