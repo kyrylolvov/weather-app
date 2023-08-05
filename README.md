@@ -1,4 +1,4 @@
-## ☀️ Weather App
+## ☀️ Weatherify
 
 An API powered weather web application to search for todays and next five days weather across the globe. 
 
